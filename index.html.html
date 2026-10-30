@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA — The Growth Playbook</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--bg:#101d2c;--panel:#17283a;--paper:#f5f4ee;--ink:#1d2c3b;--muted:#a8b5bd;--green:#83b49a;--mint:#d8eadf;--gold:#e5bd72;--coral:#e18d78;--white:#fff;--line:rgba(255,255,255,.13)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white)}
+button{font:inherit}.deck{height:100dvh;width:100%;position:relative;overflow:hidden;background:radial-gradient(circle at 85% 12%,rgba(131,180,154,.13),transparent 28%),var(--bg)}
+.slide{position:absolute;inset:0;padding:clamp(26px,5vw,76px) clamp(24px,7vw,108px) 90px;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateX(42px) scale(.985);pointer-events:none;transition:opacity .55s ease,transform .65s cubic-bezier(.2,.8,.2,1);overflow:auto}
+.slide.active{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
+.slide.exit-left{transform:translateX(-42px) scale(.985)}
+.eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:18px}
+h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:Manrope,sans-serif;letter-spacing:-.045em}
+h1{font-size:clamp(3.2rem,8vw,7.2rem);line-height:.94;margin-bottom:28px;max-width:850px}
+h2{font-size:clamp(2.2rem,5vw,4.3rem);line-height:1.02;margin-bottom:18px;color:var(--white)}
+h3{font-size:1.1rem;margin-bottom:10px;color:var(--white)}
+.lead{font-size:clamp(1.05rem,2vw,1.45rem);line-height:1.55;color:#d3ddd9;max-width:700px}
+.small{color:var(--muted);line-height:1.65;font-size:.98rem}
+.accent{color:var(--gold)}.mint{color:var(--mint)}
+.rule{height:3px;width:64px;background:var(--gold);margin:24px 0}
+.cover-art{position:absolute;right:6%;top:15%;width:min(34vw,410px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(216,234,223,.28);background:radial-gradient(circle at 35% 35%,rgba(131,180,154,.8),rgba(43,86,70,.5) 34%,rgba(16,29,44,.1) 68%);box-shadow:0 0 100px rgba(131,180,154,.13);animation:float 7s ease-in-out infinite}
+.cover-art:before,.cover-art:after{content:"";position:absolute;border:1px solid rgba(229,189,114,.65);border-radius:50%;inset:13%;transform:rotate(-28deg) scaleX(1.5)}
+.cover-art:after{transform:rotate(48deg) scaleX(1.5);border-color:rgba(216,234,223,.55)}
+@keyframes float{50%{transform:translateY(-18px) rotate(5deg)}}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:26px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{background:rgba(255,255,255,.065);border:1px solid var(--line);border-radius:20px;padding:23px;min-height:155px;backdrop-filter:blur(8px);transition:transform .25s,border-color .25s,background .25s}
+.card:hover{transform:translateY(-5px);border-color:rgba(131,180,154,.7);background:rgba(255,255,255,.09)}
+.card .num{font-size:.78rem;color:var(--gold);font-weight:700;letter-spacing:.12em;margin-bottom:18px}
+.card p{color:var(--muted);font-size:.92rem;line-height:1.55;margin-bottom:0}
+.light-slide{background:var(--paper);color:var(--ink)}
+.light-slide h2,.light-slide h3{color:var(--ink)}
+.light-slide .small{color:#65737d}
+.light-slide .card{background:#fff;border:1px solid #e7e7df;box-shadow:0 10px 35px rgba(30,45,55,.045)}
+.light-slide .card h3{color:var(--ink)}.light-slide .card p{color:#6e7a80}
+.light-slide .eyebrow{color:#54836b}
+.light-slide .num{color:#b18a46}
+.metric{font-family:Manrope,sans-serif;font-size:clamp(2.3rem,5vw,4.2rem);font-weight:800;letter-spacing:-.06em;color:var(--green)}
+.bar-list{display:grid;gap:19px;margin-top:28px;max-width:850px}
+.bar-row{display:grid;grid-template-columns:130px 1fr 55px;gap:16px;align-items:center;font-weight:600}
+.bar{height:11px;border-radius:20px;background:rgba(131,180,154,.16);overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:20px;transition:width 1.1s ease .3s}
+.active .bar span{width:var(--w)}
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px;position:relative}
+.timeline .card{min-height:205px}
+.week{font-size:.7rem;letter-spacing:.15em;color:var(--green);font-weight:700}
+.quote{font-family:Manrope,sans-serif;font-weight:700;font-size:clamp(1.8rem,4vw,3.5rem);line-height:1.15;max-width:900px}
+.controls{position:absolute;bottom:24px;left:clamp(24px,7vw,108px);right:clamp(24px,7vw,108px);display:flex;align-items:center;gap:16px;z-index:10}
+.progress{height:3px;background:rgba(255,255,255,.16);flex:1;border-radius:9px;overflow:hidden}
+.progress span{display:block;height:100%;width:10%;background:var(--gold);transition:width .4s}
+.counter{font-size:.78rem;color:var(--muted);min-width:48px}
+.nav{display:flex;gap:8px}
+.nav button,.restart{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:#fff;border-radius:50px;padding:10px 15px;cursor:pointer;transition:.2s}
+.nav button:hover,.restart:hover{background:var(--green);color:var(--bg);border-color:var(--green)}
+.hint{position:absolute;right:clamp(24px,7vw,108px);top:26px;color:rgba(255,255,255,.45);font-size:.72rem;letter-spacing:.08em}
+.light-slide .hint{color:#89949a}
+.pill{display:inline-flex;padding:8px 13px;border-radius:99px;background:rgba(131,180,154,.14);color:var(--mint);font-size:.78rem;font-weight:700;letter-spacing:.08em}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px;max-width:850px}
+.check{padding:16px 18px;border:1px solid var(--line);border-radius:14px;color:#d5dfdc}
+.check b{color:var(--gold);margin-right:9px}
+@media(max-width:760px){.slide{padding:65px 24px 100px;justify-content:center}.cover-art{width:42vw;right:-8%;top:10%;opacity:.55}h1{font-size:clamp(3rem,15vw,5rem)}.grid,.grid.two,.timeline{grid-template-columns:1fr;gap:10px}.card{min-height:auto;padding:16px}.card .num{margin-bottom:8px}.card p{font-size:.85rem}.hint{display:none}.bar-row{grid-template-columns:88px 1fr 40px;gap:8px;font-size:.8rem}.checks{grid-template-columns:1fr}.controls{bottom:15px}.nav button{padding:9px 12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="deck" id="deck">
+  <div class="hint">USE ← → KEYS TO NAVIGATE</div>
+  <section class="slide active" data-title="Cover">
+    <div class="cover-art"></div>
+    <span class="pill">BRAND LAUNCH · 90-DAY ROADMAP</span>
+    <div style="height:28px"></div>
+    <div class="eyebrow">NOVA / DIGITAL GROWTH STRATEGY</div>
+    <h1>THE GROWTH<br><span class="accent">PLAYBOOK.</span></h1>
+    <p class="lead">A digital marketing strategy for a new lifestyle brand.</p>
+    <div class="rule"></div>
+    <p class="small">A focused plan to build awareness, earn trust and turn attention into action.</p>
+  </section>
+
+  <section class="slide light-slide" data-title="Brand">
+    <div class="eyebrow">01 / THE FOUNDATION</div><h2>Meet <span style="color:#54836b">NOVA.</span></h2>
+    <p class="lead" style="color:#51616b">A fictional, modern lifestyle brand built around simple everyday essentials.</p>
+    <div class="grid">
+      <article class="card"><div class="num">01 / PROMISE</div><h3>Thoughtful essentials.</h3><p>Less noise. More everyday value. Products designed to make daily life feel easier.</p></article>
+      <article class="card"><div class="num">02 / PERSONALITY</div><h3>Fresh & confident.</h3><p>Practical, approachable and honest — never complicated or over-promising.</p></article>
+      <article class="card"><div class="num">03 / POSITIONING</div><h3>Quality with purpose.</h3><p>For people who value useful design, clear information and considered choices.</p></article>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Audience">
+    <div class="eyebrow">02 / WHO WE SERVE</div><h2>Know the <span class="accent">audience.</span></h2>
+    <p class="small">Three useful audience profiles to guide the message and the media mix.</p>
+    <div class="grid">
+      <article class="card"><div class="num">PERSONA 01</div><h3>The mindful achiever</h3><p>22–35 · Urban · Busy schedule<br>Wants products that save time and feel worth the price.</p></article>
+      <article class="card"><div class="num">PERSONA 02</div><h3>The style seeker</h3><p>18–30 · Social-first · Trend-aware<br>Looks for clean design, inspiration and peer reviews.</p></article>
+      <article class="card"><div class="num">PERSONA 03</div><h3>The practical buyer</h3><p>28–40 · Value-conscious<br>Compares options and needs proof before purchasing.</p></article>
+    </div>
+    <p class="lead" style="margin-top:24px"><span class="accent">Key insight:</span> Trust is the bridge between attention and action.</p>
+  </section>
+
+  <section class="slide light-slide" data-title="Opportunity">
+    <div class="eyebrow">03 / THE LANDSCAPE</div><h2>Win with <span style="color:#54836b">clarity.</span></h2>
+    <p class="lead" style="color:#51616b">A crowded feed makes distinctiveness more valuable than simply posting more often.</p>
+    <div class="grid">
+      <article class="card"><div class="num">THE CHALLENGE</div><h3>Category noise</h3><p>Customers see similar offers every day. Generic product posts are easy to ignore.</p></article>
+      <article class="card"><div class="num">THE OPENING</div><h3>Useful content</h3><p>Build a recognizable identity and become a helpful source of everyday advice.</p></article>
+      <article class="card"><div class="num">THE ADVANTAGE</div><h3>Human connection</h3><p>Pair product clarity with relatable storytelling and responsive community care.</p></article>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Goals">
+    <div class="eyebrow">04 / WHAT SUCCESS LOOKS LIKE</div><h2>90-day <span class="accent">targets.</span></h2>
+    <p class="small">Illustrative launch targets — validate them against the real budget, baseline and market.</p>
+    <div class="grid">
+      <article class="card"><div class="metric">50K</div><h3>Relevant reach</h3><p>Build visibility through short-form video and creator partnerships.</p></article>
+      <article class="card"><div class="metric">5%</div><h3>Engagement rate</h3><p>Create posts people want to save, share and discuss.</p></article>
+      <article class="card"><div class="metric">500</div><h3>Qualified leads</h3><p>Use a focused landing page and a clear reason to sign up.</p></article>
+    </div>
+  </section>
+
+  <section class="slide light-slide" data-title="Channels">
+    <div class="eyebrow">05 / WHERE WE SHOW UP</div><h2>Channel <span style="color:#54836b">strategy.</span></h2>
+    <div class="grid two">
+      <article class="card"><div class="num">01 / DISCOVERY</div><h3>Instagram</h3><p>Reels, carousels, Stories and creator content to build community and discovery.</p></article>
+      <article class="card"><div class="num">02 / REACH</div><h3>TikTok</h3><p>Short videos and relevant trends that show the brand's personality.</p></article>
+      <article class="card"><div class="num">03 / RETENTION</div><h3>Email</h3><p>Welcome flow, product education and thoughtful launch updates.</p></article>
+      <article class="card"><div class="num">04 / CONVERSION</div><h3>Website</h3><p>Clear benefits, FAQs, reviews and a simple path to take action.</p></article>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Content">
+    <div class="eyebrow">06 / WHAT WE PUBLISH</div><h2>Content with a <span class="accent">purpose.</span></h2>
+    <p class="small">A balanced content mix keeps the brand helpful, memorable and commercially focused.</p>
+    <div class="bar-list">
+      <div class="bar-row"><span>Educate</span><div class="bar"><span style="--w:40%"></span></div><b>40%</b></div>
+      <div class="bar-row"><span>Inspire</span><div class="bar"><span style="--w:25%"></span></div><b>25%</b></div>
+      <div class="bar-row"><span>Prove</span><div class="bar"><span style="--w:20%"></span></div><b>20%</b></div>
+      <div class="bar-row"><span>Convert</span><div class="bar"><span style="--w:15%"></span></div><b>15%</b></div>
+    </div>
+    <p class="small" style="margin-top:28px">Every post should have one job: teach, inspire, prove or convert.</p>
+  </section>
+
+  <section class="slide light-slide" data-title="Calendar">
+    <div class="eyebrow">07 / THE WEEKLY RHYTHM</div><h2>A sample <span style="color:#54836b">content week.</span></h2>
+    <div class="grid">
+      <article class="card"><div class="num">MONDAY</div><h3>Quick-tip Reel</h3><p>One useful idea in a short, saveable video.</p></article>
+      <article class="card"><div class="num">TUESDAY</div><h3>How-to carousel</h3><p>A simple step-by-step guide for the audience.</p></article>
+      <article class="card"><div class="num">WEDNESDAY</div><h3>Stories & Q&A</h3><p>Polls, questions and community conversations.</p></article>
+      <article class="card"><div class="num">THURSDAY</div><h3>Product in use</h3><p>Show the product solving a real-life need.</p></article>
+      <article class="card"><div class="num">FRIDAY</div><h3>Customer proof</h3><p>Share a review, testimonial or customer story.</p></article>
+      <article class="card"><div class="num">WEEKEND</div><h3>Behind the scenes</h3><p>Build familiarity with the people behind the brand.</p></article>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Campaign">
+    <div class="eyebrow">08 / LAUNCH ACTIVATION</div><h2>Make room for <span class="accent">better.</span></h2>
+    <p class="small">A three-week campaign that moves people from discovery to decision.</p>
+    <div class="timeline">
+      <article class="card"><div class="week">WEEK 01 / TEASE</div><h3 style="margin-top:18px">Build curiosity.</h3><p>Sneak peeks, countdowns and the story behind the brand.</p></article>
+      <article class="card"><div class="week">WEEK 02 / LAUNCH</div><h3 style="margin-top:18px">Make the reveal.</h3><p>Product demos, creator content and a clear launch message.</p></article>
+      <article class="card"><div class="week">WEEK 03 / PROVE</div><h3 style="margin-top:18px">Earn confidence.</h3><p>Customer reactions, FAQ content and follow-up with engaged visitors.</p></article>
+    </div>
+  </section>
+
+  <section class="slide light-slide" data-title="Measurement">
+    <div class="eyebrow">09 / MEASURE & IMPROVE</div><h2>Track what <span style="color:#54836b">matters.</span></h2>
+    <p class="lead" style="color:#51616b">Review performance weekly. Keep what works, improve what doesn't.</p>
+    <div class="checks">
+      <div class="check" style="color:#253847;border-color:#dfe4dc"><b>01</b> Reach & video views</div>
+      <div class="check" style="color:#253847;border-color:#dfe4dc"><b>02</b> Saves, shares & comments</div>
+      <div class="check" style="color:#253847;border-color:#dfe4dc"><b>03</b> Landing-page clicks</div>
+      <div class="check" style="color:#253847;border-color:#dfe4dc"><b>04</b> Leads & conversion rate</div>
+    </div>
+    <p class="small" style="margin-top:26px">Use the data to guide decisions — not just to fill a report.</p>
+  </section>
+
+  <section class="slide" data-title="Closing">
+    <div class="eyebrow">THE NEXT 90 DAYS</div>
+    <p class="quote">A clear brand.<br><span class="accent">A useful message.</span><br>A consistent experience.</p>
+    <div class="rule"></div>
+    <h2 style="font-size:clamp(2rem,4vw,3.3rem)">MAKE ROOM FOR BETTER.</h2>
+    <p class="small">Start small. Test often. Grow with purpose.</p>
+    <div style="margin-top:26px"><button class="restart" onclick="goTo(0)">↻ Restart presentation</button></div>
+  </section>
+
+  <div class="controls">
+    <div class="counter" id="counter">01 / 11</div>
+    <div class="progress"><span id="progress"></span></div>
+    <div class="nav"><button id="prev" aria-label="Previous slide">←</button><button id="next" aria-label="Next slide">→</button></div>
+  </div>
+</main>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let current=0;
+const counter=document.getElementById('counter'), progress=document.getElementById('progress');
+function goTo(index){
+  const next=Math.max(0,Math.min(slides.length-1,index));
+  if(next===current)return;
+  slides[current].classList.remove('active'); slides[current].classList.toggle('exit-left',next>current);
+  const old=current; current=next;
+  slides.forEach((s,i)=>{if(i!==old)s.classList.remove('exit-left');});
+  slides[current].classList.add('active');
+  counter.textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  progress.style.width=((current+1)/slides.length*100)+'%';
+  document.title=slides[current].dataset.title+' — NOVA Growth Playbook';
+}
+document.getElementById('prev').addEventListener('click',()=>goTo(current-1));
+document.getElementById('next').addEventListener('click',()=>goTo(current+1));
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();goTo(current+1)}
+  if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();goTo(current-1)}
+  if(e.key==='Home')goTo(0); if(e.key==='End')goTo(slides.length-1);
+});
+let startX=0;
+document.addEventListener('touchstart',e=>{startX=e.changedTouches[0].screenX},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].screenX-startX;if(Math.abs(dx)>55)goTo(current+(dx<0?1:-1))},{passive:true});
+progress.style.width=(100/slides.length)+'%';
+</script>
+</body>
+</html>
